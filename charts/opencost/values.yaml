@@ -24,7 +24,7 @@ opencost:
     resources:
       requests:
         cpu: '10m'
-        memory: '55M'
+        memory: '100M'
       limits:
         cpu: '999m'
         memory: '1G'
@@ -77,3 +77,4 @@ opencost:
         memory: '1G'
 
   tolerations: []
+# Testing

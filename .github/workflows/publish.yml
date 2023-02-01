@@ -1,12 +1,9 @@
-# heavily borrowed from https://github.com/dirien/minecraft-prometheus-exporter/blob/main/.github/workflows/helm-publish.yaml
 ---
 name: chart-publish
 on:
   push:
     branches:
       - main
-    paths:
-      - 'charts/**'
 env:
   HELM_DOCS_VERSION: '1.11.0'
 
@@ -32,15 +29,15 @@ jobs:
         run: |
           git config user.name "helm-bot"
           git config user.email "helm-bot@users.noreply.github.com"
-      - name: install helm-docs
-        run: |
-          cd /tmp
-          wget https://github.com/norwoodj/helm-docs/releases/download/v${{env.HELM_DOCS_VERSION}}/helm-docs_${{env.HELM_DOCS_VERSION}}_Linux_x86_64.tar.gz
-          tar -xvf helm-docs_${{env.HELM_DOCS_VERSION}}_Linux_x86_64.tar.gz
-          sudo mv helm-docs /usr/local/sbin
-      - name: run helm-docs
-        run: |
-          helm-docs .
+#      - name: install helm-docs
+#        run: |
+#          cd /tmp
+#          wget https://github.com/norwoodj/helm-docs/releases/download/v${{env.HELM_DOCS_VERSION}}/helm-docs_${{env.HELM_DOCS_VERSION}}_Linux_x86_64.tar.gz
+#          tar -xvf helm-docs_${{env.HELM_DOCS_VERSION}}_Linux_x86_64.tar.gz
+#          sudo mv helm-docs /usr/local/sbin
+#      - name: run helm-docs
+#        run: |
+#          helm-docs .
       - name: Login to GHCR
         uses: docker/login-action@v2
         with:
@@ -50,8 +47,7 @@ jobs:
       - name: Run chart-releaser
         uses: helm/chart-releaser-action@be16258da8010256c6e82849661221415f031968 # v1.5.0
         with:
-          charts_dir: ./
-          config: './.github/configs/cr.yaml'
+          charts_dir: charts
         env:
           CR_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
           CR_RELEASE_NAME_TEMPLATE: '{{ .Version }}-helm'

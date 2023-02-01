@@ -1,5 +1,5 @@
 # Cluster role giving opencost to get, list, watch required resources
-# No write permissions are required
+#No write permissions are required
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
