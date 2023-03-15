@@ -119,5 +119,31 @@ opencost:
   # -- Assign custom TopologySpreadConstraints rules
   topologySpreadConstraints: []
 
+ingress:
+  # -- If true, Create the OpenCost ingress. A host must be set if this is enabled. Requires Kubernetes 1.18+
+  enabled: false
+  # -- Specify the ingress class for the field ingress.spec.ingressClassName
+  ingressClassName: nginx
+  # -- Annotations to add to the ingress
+  annotations: {}
+  # -- Additional labels to add to the ingress
+  extraLabels: {}
+  exporter:
+    # -- Hosts for accessing the opencost exporter. Set a host to expose the exporter through the ingress
+    hosts: []
+    # -- Customize paths that allow access to the service.
+    paths: ["/"]
+    # -- Path type matcher. Prefix, Exact, or ImplementationSpecific
+    pathType: Prefix
+  ui:
+    # -- Hosts for accessing the opencost ui. Set a host to expose the ui through the ingress
+    hosts: []
+    # -- Customize paths that allow access to the service.
+    paths: ["/"]
+    # -- Path type matcher. Prefix, Exact, or ImplementationSpecific
+    pathType: Prefix
+  # Used to add TLS support for the ingress hosts. E.g. { host: [ "https-example.foo.com" ], secretName: testsecret-tls }
+  tls: []
+
 # -- A list of volumes to be added to the pod
 extraVolumes: []

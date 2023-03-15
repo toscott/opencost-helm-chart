@@ -1,0 +1,50 @@
+{{- if .Values.ingress.enabled -}}
+# This template should only be used if your app is using an ingress as an upstream on our external nginx nodes
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  labels:
+    {{- include "opencost.labels" . | nindent 4 }}
+  name: {{ include "opencost.fullname" . }}
+  annotations:
+  {{- if .Values.ingress.annotations }}
+    {{ toYaml .Values.ingress.annotations | indent 4}}
+  {{- end }}
+spec:
+  ingressClassName:  {{ .Values.server.ingress.ingressClassName }}
+  rules:
+  {{- range .Values.ingress.exporter.hosts }}
+    - host: {{ . | quote }}
+      http:
+        paths:
+        {{- range $.Values.ingress.exporter.paths }}
+          - path: {{ . | quote }}
+            pathType: {{ $.Values.ingress.exporter.pathType }}
+            backend:
+              service:
+                name: {{ include "opencost.fullname" . }}
+                port:
+                  name: http
+        {{- end }}
+  {{- end }}
+  {{- if .Values.opencost.ui.enabled }}
+  {{- range .Values.ingress.ui.hosts }}
+    - host: {{ . | quote }}
+      http:
+        paths:
+        {{- range $.Values.ingress.ui.paths }}
+          - path: {{ . | quote }}
+            pathType: {{ $.Values.ingress.ui.pathType }}
+            backend:
+              service:
+                name: {{ include "opencost.fullname" . }}
+                port:
+                  name: http-ui
+        {{- end }}
+  {{- end }}
+  {{- end }}
+  {{- if .Values.ingress.tls }}
+  tls:
+    {{ toYaml .Values.ingress.tls | indent 4}}
+  {{- end}}
+{{- end -}}
